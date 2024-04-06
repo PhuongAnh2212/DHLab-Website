@@ -1,19 +1,32 @@
-import React from 'react';
-import './App.css';
-import HomePage from './UI/homepage';
+import React, { useState, useEffect } from 'react';
+import './App.css'; // Optional: import CSS for styling
 
-function App() {
+import htmlContent from './background.html'; // Import HTML content as a string
+
+const App = () => {
+  const [content, setContent] = useState(''); // State to hold HTML content
+
+  useEffect(() => {
+    // Fetch and set HTML content when component mounts
+    const fetchHtmlContent = async () => {
+      try {
+        const response = await fetch(htmlContent);
+        const htmlString = await response.text();
+        setContent(htmlString);
+      } catch (error) {
+        console.error('Error fetching HTML content:', error);
+      }
+    };
+
+    fetchHtmlContent(); // Call the function to fetch HTML content
+  }, []); // Empty dependency array to run effect only once on mount
+
   return (
-    <div className="App">
-      <header className="App-header">
-        {/* You can keep your existing content or remove it */}
-        <h1>Welcome to My React App</h1>
-      </header>
-      <main>
-        <HomePage /> {/* Render your homepage component here */}
-      </main>
+    <div className="app-container">
+      {/* Render HTML content using dangerouslySetInnerHTML */}
+      <div dangerouslySetInnerHTML={{ __html: content }} />
     </div>
   );
-}
+};
 
 export default App;
